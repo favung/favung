@@ -1,5 +1,4 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require "#{::Rails.root}/lib/runners/ruby_runner"
 
 describe Runners::RubyRunner do
   it "should run ruby script" do
