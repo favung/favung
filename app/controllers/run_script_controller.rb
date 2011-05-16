@@ -3,7 +3,8 @@ class RunScriptController < ApplicationController
   end
 
   def run
-    @output = `ruby -e "#{params[:script][:script]}"`
+    runner = Runners::RubyRunner.new
+    @output = runner.run(params[:script][:script])
   end
 
 end
