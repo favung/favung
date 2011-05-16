@@ -33,6 +33,8 @@ group :development, :test do
   gem 'cucumber'
   gem 'cucumber-rails'
   gem 'pickle'
+  gem 'rspec'
+  gem 'rspec-rails'
 end
 # group :development, :test do
 #   gem 'webrat'
