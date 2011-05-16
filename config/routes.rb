@@ -1,4 +1,8 @@
 Favung::Application.routes.draw do
+  get "run_script/index", :as => :submit_script
+
+  post "run_script/run", :as => :run
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
