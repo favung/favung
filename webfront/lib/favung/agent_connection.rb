@@ -1,14 +1,11 @@
-require 'drb'
+require 'net/http'
 
 class AgentConnection
-  def initialize(service_path)
-    @service_path = service_path
-  end
-
-  def run_script(input_file_name)
-    DRb.start_service
-    agent = DRbObject.new nil, @service_path
-    agent.execute(input_file_name)
+  def run_script(input_file_name, output_file_name)
+    channel = '/scripts'
+    message = {:channel => channel, :data => { :input => input_file_name, :output => output_file_name }}
+    uri = URI.parse("http://localhost:9292/faye")
+    Net::HTTP.post_form(uri, :message => message.to_json)
   end
 
 end
