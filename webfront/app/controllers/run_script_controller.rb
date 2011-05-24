@@ -1,22 +1,13 @@
-require 'drb'
-require 'mongo'
-
 class RunScriptController < ApplicationController
   def index
   end
 
   def run
-    gridfs_path = 'solution.txt'
-    gridfs_file = Mongo::GridFileSystem.new(Mongoid.database).open(gridfs_path, 'w')
-    gridfs_file.write params[:script][:script]
-    gridfs_file.close
+    GridFileSystemHelper::store_file("solution.txt", params[:script][:script])
 
-    DRb.start_service
-    agent = DRbObject.new nil, params[:script][:service_url].chomp
-    output_path = agent.execute('solution.txt')
+    agent = AgentConnection.new(params[:script][:service_url])
+    output_path = agent.run_script("solution.txt")
 
-    output_file = Mongo::GridFileSystem.new(Mongoid.database).open(output_path, 'r')
-    @output = output_file.read
-    output_file.close
+    @output = GridFileSystemHelper::read_file(output_path)
   end
 end
