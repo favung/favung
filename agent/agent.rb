@@ -1,8 +1,8 @@
 require 'drb'
 
 class Agent
-  def execute
-    "Hello world"
+  def execute(script)
+    `ruby -e "#{script}"`
   end
 end
 

@@ -2,5 +2,6 @@
 %p Find me in app/views/run_script/index.html.erb
 
 = form_for "script", :url => run_path do |f|
+  = f.text_field :service_url
   = f.text_area :script
   = f.submit
