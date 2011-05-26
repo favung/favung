@@ -1,9 +1,18 @@
 require 'mongo'
 require 'eventmachine'
 require 'faye'
+require 'yaml'
+def load_configuration
+  environment = ENV['ENV'] || 'development'
+  mongo_configuration = YAML::load_file('config/mongo.yml')
 
-connection = Mongo::Connection.new
-$db = connection.db('favung_development')
+  return mongo_configuration[environment]
+end
+
+
+configuration = load_configuration
+connection = Mongo::Connection.new(configuration["host"])
+$db = connection.db(configuration["database"])
 
 class Agent
   def execute(input_path, output_path)
@@ -24,6 +33,7 @@ agent = Agent.new
 client = Faye::Client.new('http://localhost:9292/faye')
 EM.run {
   client.subscribe('/scripts') do |message|
+    puts "Processing script #{message['input']}"
     agent.execute(message["input"], message["output"])
   end
 }
