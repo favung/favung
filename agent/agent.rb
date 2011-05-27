@@ -2,17 +2,25 @@ require 'mongo'
 require 'eventmachine'
 require 'faye'
 require 'yaml'
+require 'logger'
 def load_configuration
   environment = ENV['ENV'] || 'development'
   mongo_configuration = YAML::load_file('config/mongo.yml')
+  logger_configuration = YAML::load_file('config/logger.yml')
 
-  return mongo_configuration[environment]
+
+  return {
+    mongo: mongo_configuration[environment],
+    logger: logger_configuration[environment]
+  }
 end
 
 
 configuration = load_configuration
-connection = Mongo::Connection.new(configuration["host"])
-$db = connection.db(configuration["database"])
+connection = Mongo::Connection.new(configuration[:mongo]["host"])
+$db = connection.db(configuration[:mongo]["database"])
+
+$logger = Logger.new(STDOUT)
 
 class Agent
   def execute(input_path, output_path)
@@ -33,7 +41,7 @@ agent = Agent.new
 client = Faye::Client.new('http://localhost:9292/faye')
 EM.run {
   client.subscribe('/scripts') do |message|
-    puts "Processing script #{message['input']}"
+    $logger.info "Processing script #{message['input']}"
     agent.execute(message["input"], message["output"])
   end
 }
