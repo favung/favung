@@ -1,0 +1,8 @@
+caption always "%n(%t): %C"
+split
+screen -t Faye bash faye/run_faye.sh
+focus
+split
+screen -t Agent bash agent/run_agent.sh
+focus
+screen -t AgentTest bash agent/run_agent_test.sh

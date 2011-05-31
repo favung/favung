@@ -1,0 +1,11 @@
+development:
+  severity: DEBUG
+  output: log/development.log
+
+test:
+  severity: DEBUG
+  output: log/test.log
+
+production:
+  severity: WARN
+  output: log/production.log
