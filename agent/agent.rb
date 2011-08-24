@@ -1,20 +1,20 @@
+#!/usr/bin/env ruby
 require 'mongo'
 require 'eventmachine'
-require 'faye'
 require 'yaml'
 require 'logger'
+require 'amqp'
+
 def load_configuration
   environment = ENV['ENV'] || 'development'
   mongo_configuration = YAML::load_file('config/mongo.yml')
   logger_configuration = YAML::load_file('config/logger.yml')
-
 
   return {
     mongo: mongo_configuration[environment],
     logger: logger_configuration[environment]
   }
 end
-
 
 configuration = load_configuration
 connection = Mongo::Connection.new(configuration[:mongo]["host"])
@@ -36,12 +36,15 @@ class Agent
   end
 end
 
-
 agent = Agent.new
-client = Faye::Client.new('http://localhost:9292/faye')
-EM.run {
-  client.subscribe('/scripts') do |message|
+
+AMQP.start do |connection|
+  channel = AMQP::Channel.new(connection)
+  queue = channel.queue("scripts", auto_delete: true)
+  exchange = channel.direct("")
+  queue.subscribe do |message|
+    message = BSON.deserialize(message)
     $logger.info "Processing script #{message['input']}"
     agent.execute(message["input"], message["output"])
   end
-}
+end
