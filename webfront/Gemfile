@@ -9,6 +9,8 @@ gem 'sqlite3'
 gem 'haml'
 gem 'bson_ext'
 gem 'mongoid'
+gem 'amqp', '~> 0.8.0.RC13'
+gem 'bunny'
 
 # Use unicorn as the web server
 # gem 'unicorn'
