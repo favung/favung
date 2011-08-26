@@ -1,4 +1,8 @@
 Favung::Application.routes.draw do
+  devise_for :users
+
+  root to: 'home#index'
+
   resources :submissions do
     resources :runs
   end
