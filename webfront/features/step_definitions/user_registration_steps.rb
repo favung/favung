@@ -15,7 +15,7 @@ Then /^I should be signed in$/ do
 end
 
 Given /^I am registered user$/ do
-  @user = User.create!(email: 'foo@example.org', password: 'secret')
+  @user = Fabricate(:user)
 end
 
 When /^I follow the sign in page$/ do

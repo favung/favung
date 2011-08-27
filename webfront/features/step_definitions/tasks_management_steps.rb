@@ -1,5 +1,5 @@
 When /^I fill in the task form$/ do
-  @task = Task.new(name: 'Task name', description: 'Task descrption')
+  @task = Fabricate.build(:task)
 
   fill_in 'task_name', with: @task.name
   fill_in 'task_description', with: @task.description
@@ -13,7 +13,7 @@ Then /^the task should be created$/ do
 end
 
 Given /^one task exists$/ do
-  @task = Task.create!(name: 'Task name', description: 'Task description')
+  @task = Fabricate(:task)
 end
 
 When /^I modify the task description$/ do

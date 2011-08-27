@@ -40,6 +40,8 @@ group :development, :test do
   gem 'pickle'
   gem 'rspec'
   gem 'rspec-rails'
+  gem 'fabrication'
+  gem 'faker'
 end
 # group :development, :test do
 #   gem 'webrat'
