@@ -5,4 +5,13 @@ class User
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  attr_accessible :email, :password, :password_confirmation
+
+  ROLES = %w[user admin]
+
+  field :role, default: 'user'
+
+  def admin?
+    role == "admin"
+  end
 end

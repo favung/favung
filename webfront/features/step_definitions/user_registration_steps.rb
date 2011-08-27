@@ -45,3 +45,10 @@ Then /^I should be signed out$/ do
   page.should have_content('Sign in')
   page.should have_content('Sign up')
 end
+
+Given /^I am signed in as admin$/ do
+  @user = Fabricate(:user, role: 'admin')
+  And 'I am on the home page'
+  And 'I follow the sign in page'
+  And 'I fill in sign in form'
+end
