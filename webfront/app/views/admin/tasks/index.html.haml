@@ -1,0 +1,8 @@
+.tasks
+  - @tasks.each do |task|
+    .task
+      = link_to task.name, task
+      = link_to 'Edit', edit_admin_task_path(task)
+      = link_to 'Delete', [:admin, task], method: :delete, config: 'Are you sure you want to remove this task'
+
+= link_to 'New Task', new_admin_task_path
