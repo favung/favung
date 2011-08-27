@@ -11,6 +11,9 @@ module NavigationHelpers
     when /the home\s?page/
       '/'
 
+    when /the edit page of that task/
+      edit_admin_task_path(@task.id)
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
