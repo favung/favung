@@ -9,10 +9,12 @@ def load_configuration
   environment = ENV['ENV'] || 'development'
   mongo_configuration = YAML::load_file('config/mongo.yml')
   logger_configuration = YAML::load_file('config/logger.yml')
+  amqp_configuration = YAML::load_file('config/amqp.yml')
 
   return {
     mongo: mongo_configuration[environment],
-    logger: logger_configuration[environment]
+    logger: logger_configuration[environment],
+    amqp: amqp_configuration[environment]
   }
 end
 
@@ -38,7 +40,7 @@ end
 
 agent = Agent.new
 
-AMQP.start do |connection|
+AMQP.start(configuration[:amqp]) do |connection|
   channel = AMQP::Channel.new(connection)
   queue = channel.queue("scripts", auto_delete: true)
   exchange = channel.direct("")
