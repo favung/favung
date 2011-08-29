@@ -15,7 +15,7 @@ Then /^I should be signed in$/ do
 end
 
 Given /^I am registered user$/ do
-  @user = User.create!(email: 'foo@example.org', password: 'secret')
+  @user = Fabricate(:user)
 end
 
 When /^I follow the sign in page$/ do
@@ -44,4 +44,11 @@ Then /^I should be signed out$/ do
   page.should_not have_content('Sign out')
   page.should have_content('Sign in')
   page.should have_content('Sign up')
+end
+
+Given /^I am signed in as admin$/ do
+  @user = Fabricate(:user, role: 'admin')
+  And 'I am on the home page'
+  And 'I follow the sign in page'
+  And 'I fill in sign in form'
 end
