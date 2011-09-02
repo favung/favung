@@ -11,7 +11,9 @@ Favung::Application.routes.draw do
     resources :tasks
   end
 
-  resources :tasks
+  resources :tasks do
+  end
+  match 'tasks/:id/:path', controller: 'tasks', action: 'show'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

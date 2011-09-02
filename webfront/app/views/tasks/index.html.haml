@@ -1,2 +1,4 @@
-- @tasks.each do |task|
-  = link_to task.name, task
+.tasks
+  - @tasks.each do |task|
+    .task
+      = link_to task.name, task
