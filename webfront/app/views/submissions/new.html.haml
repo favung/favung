@@ -1,6 +1,6 @@
-%h1 RunScript#index
-%p Find me in app/views/run_script/index.html.erb
+%h1 Submit solution
 
-= form_for "script", :url => submissions_path do |f|
+= form_for "script", url: submissions_path do |f|
   = f.text_area :script
+  %br
   = f.submit
