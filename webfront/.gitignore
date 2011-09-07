@@ -4,3 +4,5 @@ log/*.log
 tmp/
 *.swp
 .rspec
+data/*
+features/data/*
