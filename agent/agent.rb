@@ -4,6 +4,7 @@ require 'eventmachine'
 require 'yaml'
 require 'logger'
 require 'amqp'
+require 'fileutils'
 
 def load_configuration
   environment = ENV['ENV'] || 'development'
@@ -24,17 +25,48 @@ $db = connection.db(configuration[:mongo]["database"])
 
 $logger = Logger.new(STDOUT)
 
-class Agent
-  def execute(input_path, output_path)
-    script_file = Mongo::GridFileSystem.new($db).open(input_path, 'r')
-    script = script_file.read
-    script_file.close
+TMP_DIR = '/tmp/favung'
 
-    output = `ruby -e "#{script}"`
+class Agent
+  def execute(source_path, output_path)
+    prepare_environment
+
+    output = nil
+    Dir.chdir(TMP_DIR) do
+      save_source(source_path)
+      compile
+      output = execute_binary
+    end
 
     output_file = Mongo::GridFileSystem.new($db).open(output_path, 'w')
     output_file.write output
     output_file.close
+
+    puts "== Output =="
+    puts output
+  end
+
+  def compile
+    `g++ source.cpp -o submission`
+  end
+
+  def execute_binary
+    `./submission`
+  end
+
+  def save_source(source_path)
+    source_file = Mongo::GridFileSystem.new($db).open(source_path, 'r')
+    source = source_file.read
+    source_file.close
+
+    File.open('source.cpp', 'w') do |f|
+      f.write(source)
+    end
+  end
+
+  def prepare_environment
+    FileUtils.rm_rf(TMP_DIR)
+    FileUtils.mkdir_p(TMP_DIR)
   end
 end
 
