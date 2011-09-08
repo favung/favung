@@ -2,7 +2,11 @@ class Submission
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :solution_path
+  field :task
 
-  embeds_many :runs
+  belongs_to :user
+
+  def source
+    source ||= GridFileSystemHelper::read_file(id.to_s)
+  end
 end

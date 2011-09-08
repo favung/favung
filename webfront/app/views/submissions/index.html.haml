@@ -1,0 +1,10 @@
+%h1 History of submissions
+
+.submissions
+  - @submissions.each do |submission|
+    .submission
+      = submission.created_at
+      |
+      = submission.task
+      |
+      = link_to "See source", submission

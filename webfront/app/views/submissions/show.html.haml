@@ -1,0 +1,13 @@
+%h1 Submission
+
+Task:
+= @submission.task
+%br
+
+Submission time:
+= @submission.created_at
+%br
+
+Source code:
+%pre
+  = @submission.source

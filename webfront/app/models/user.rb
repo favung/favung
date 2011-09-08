@@ -11,6 +11,8 @@ class User
 
   field :role, default: 'user'
 
+  has_many :submissions
+
   def admin?
     role == "admin"
   end
