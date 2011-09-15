@@ -10,8 +10,8 @@ When /^I fill in sign up form$/ do
 end
 
 Then /^I should be signed in$/ do
-  page.should have_content('Signed in as')
-  page.should have_content('Sign out')
+  page.should have_content('Logged in as')
+  page.should have_content('Log out')
 end
 
 Given /^I am registered user$/ do
@@ -19,7 +19,7 @@ Given /^I am registered user$/ do
 end
 
 When /^I follow the sign in page$/ do
-  click_on 'Sign in'
+  click_on 'log in'
 end
 
 When /^I fill in sign in form$/ do
@@ -36,13 +36,13 @@ Given /^I am signed in user$/ do
 end
 
 When /^I click on sign out link$/ do
-  click_on 'Sign out'
+  click_on 'Log out'
 end
 
 Then /^I should be signed out$/ do
   page.should_not have_content('Signed in as')
   page.should_not have_content('Sign out')
-  page.should have_content('Sign in')
+  page.should have_content('log in')
   page.should have_content('Sign up')
 end
 

@@ -13,7 +13,7 @@ class SubmissionsController < ApplicationController
 
     AgentConnection.run_submission(submission)
 
-    redirect_to submissions_path
+    redirect_to submissions_path, notice: 'Your solution has been submitted successfuly'
   end
 
   def show

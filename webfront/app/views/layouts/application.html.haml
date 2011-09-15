@@ -16,7 +16,7 @@
           or
           = link_to 'log in', new_user_session_path
       - flash.each do |name, msg|
-        %div{id: "flash_#{name}"} msg
+        %div{id: "flash_#{name}"}= msg
       #menu
         = link_to "Home", root_path
         |
