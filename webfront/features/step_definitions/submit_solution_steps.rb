@@ -1,5 +1,6 @@
 When /^I submit the solution$/ do
-  fill_in 'submission_source', with: 'Solution'
+  @solution_source = 'Solution source'
+  fill_in 'submission_source', with: @solution_source
   click_button 'Submit'
 end
 
@@ -17,9 +18,11 @@ Before do
 end
 
 Then /^the solution should be send to the queue$/ do
+  Submission.first.source.should == @solution_source
+
   @published_messages.should have(1).message
   @published_messages.first.should == {
     input: Submission.first.id.to_s,
-    output: "outputs/#{Submission.first.id.to_s}"
+    output: "outputs/#{Submission.first.runs.last.id.to_s}"
   }
 end

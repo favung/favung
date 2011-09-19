@@ -5,6 +5,7 @@ class Submission
   field :task
 
   belongs_to :user
+  embeds_many :runs
 
   def source
     source ||= GridFileSystemHelper::read_file(id.to_s)

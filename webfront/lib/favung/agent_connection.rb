@@ -10,8 +10,8 @@ module AgentConnection
     @exchange = @bunny.exchange("")
   end
 
-  def run_submission(submission)
-    message = {input: submission.id.to_s, output: "outputs/#{submission.id.to_s}"}
+  def run_submission(submission, run)
+    message = {input: submission.id.to_s, output: "outputs/#{run.id.to_s}"}
     publish message
   end
 
