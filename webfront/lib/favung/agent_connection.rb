@@ -11,7 +11,7 @@ module AgentConnection
   end
 
   def run_submission(submission, run)
-    message = {input: submission.id.to_s, output: "outputs/#{run.id.to_s}"}
+    message = {input: submission.id.to_s, output: "outputs/#{run.id.to_s}", runner: 'CppRunner'}
     publish message
   end
 

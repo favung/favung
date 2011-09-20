@@ -8,6 +8,6 @@ class Submission
   embeds_many :runs
 
   def source
-    source ||= GridFileSystemHelper::read_file(id.to_s)
+    @source ||= GridFileSystemHelper::read_file(id.to_s)
   end
 end

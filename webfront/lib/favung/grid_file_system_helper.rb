@@ -14,4 +14,8 @@ module GridFileSystemHelper
 
     output
   end
+
+  def self.file_exists?(file_name)
+    Mongo::GridFileSystem.new(Mongoid.database).exist?(filename: file_name)
+  end
 end
