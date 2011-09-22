@@ -10,9 +10,8 @@ module AgentConnection
     @exchange = @bunny.exchange("")
   end
 
-
-  def run_script(input_file_name, output_file_name)
-    message = {input: input_file_name, output: output_file_name }
+  def run_submission(submission, run)
+    message = {input: submission.id.to_s, output: "outputs/#{run.id.to_s}", runner: 'CppRunner'}
     publish message
   end
 

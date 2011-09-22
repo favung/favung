@@ -16,12 +16,14 @@
           or
           = link_to 'log in', new_user_session_path
       - flash.each do |name, msg|
-        %div{id: "flash_#{name}"} msg
+        %div{id: "flash_#{name}"}= msg
       #menu
         = link_to "Home", root_path
         |
         = link_to "Tasks", tasks_path
         |
         = link_to "Submit", new_submission_path
+        |
+        = link_to "Submissions", submissions_path
 
       = yield

@@ -2,8 +2,11 @@ class Run
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :output_path
-  field :error_code, :type => Integer
-
   embedded_in :submission
+
+  def output
+    if GridFileSystemHelper.file_exists?("outputs/#{id.to_s}")
+      @output ||= GridFileSystemHelper::read_file("outputs/#{id.to_s}")
+    end
+  end
 end

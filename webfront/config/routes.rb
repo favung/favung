@@ -3,9 +3,7 @@ Favung::Application.routes.draw do
 
   root to: 'home#index'
 
-  resources :submissions do
-    resources :runs
-  end
+  resources :submissions
 
   resources :tasks
 

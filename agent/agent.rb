@@ -4,6 +4,7 @@ require 'eventmachine'
 require 'yaml'
 require 'logger'
 require 'amqp'
+require 'fileutils'
 
 def load_configuration
   environment = ENV['ENV'] || 'development'
@@ -24,17 +25,67 @@ $db = connection.db(configuration[:mongo]["database"])
 
 $logger = Logger.new(STDOUT)
 
-class Agent
-  def execute(input_path, output_path)
-    script_file = Mongo::GridFileSystem.new($db).open(input_path, 'r')
-    script = script_file.read
-    script_file.close
+TMP_DIR = '/tmp/favung'
 
-    output = `ruby -e "#{script}"`
+class CppRunner
+  def run(source)
+    save_source(source)
+    compile
+    execute_binary
+  end
+
+  def compile
+    `g++ source.cpp -o submission`
+  end
+
+  def execute_binary
+    `./submission`
+  end
+
+  def save_source(source)
+    File.open('source.cpp', 'w') do |f|
+      f.write(source)
+    end
+  end
+end
+
+class RubyRunner
+  def run(source)
+    `ruby -e "#{source}"`
+  end
+end
+
+class Agent
+  def execute(source_path, output_path, runner_name)
+    # TODO(zurkowski) Replace it with something nicer :)
+    runner = case runner_name
+             when "CppRunner"
+               CppRunner.new
+             when "RubyRunner"
+               RubyRunner.new
+             else
+               $logger.info "Unknown runner name: #{runner_name}"
+             end
+
+    prepare_environment
+
+    output = nil
+    Dir.chdir(TMP_DIR) do
+      source = Mongo::GridFileSystem.new($db).open(source_path, 'r') {|f| f.read }
+      output = runner.run(source)
+    end
 
     output_file = Mongo::GridFileSystem.new($db).open(output_path, 'w')
     output_file.write output
     output_file.close
+
+    puts "== Output =="
+    puts output
+  end
+
+  def prepare_environment
+    FileUtils.rm_rf(TMP_DIR)
+    FileUtils.mkdir_p(TMP_DIR)
   end
 end
 
@@ -47,6 +98,6 @@ AMQP.start(configuration[:amqp]) do |connection|
   queue.subscribe do |message|
     message = BSON.deserialize(message)
     $logger.info "Processing script #{message['input']}"
-    agent.execute(message["input"], message["output"])
+    agent.execute(message["input"], message["output"], message["runner"])
   end
 end
